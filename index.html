@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coral 王歆宇</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#0a0a0f;
+  color:#e8e8ed;
+  overflow-x:hidden;
+  line-height:1.6
+}
+::selection{background:#6c5ce7;color:#fff}
+
+/* ── scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#0a0a0f}
+::-webkit-scrollbar-thumb{background:#2d2d3d;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#6c5ce7}
+
+/* ── nav ── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:16px 32px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(10,10,15,.75);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  transition:transform .4s cubic-bezier(.4,0,.2,1)
+}
+.nav.hidden{transform:translateY(-100%)}
+.nav-logo{font-weight:800;font-size:18px;letter-spacing:.5px;background:linear-gradient(135deg,#6c5ce7,#a29bfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{color:#888;text-decoration:none;font-size:13px;font-weight:500;transition:color .25s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;width:0;height:2px;background:#6c5ce7;transition:width .3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{width:100%}
+.nav-hamburger{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+
+/* ── sections ── */
+.section{
+  min-height:100vh;
+  padding:80px 24px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden
+}
+.section-inner{
+  max-width:960px;width:100%;
+  position:relative;z-index:2
+}
+
+/* ── hero ── */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:120px 24px 60px;
+  position:relative;
+  background:radial-gradient(ellipse at 50% 0%, rgba(108,92,231,.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(0,64,152,.08) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 70%, rgba(239,1,7,.06) 0%, transparent 50%)
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 16px;border-radius:100px;
+  background:rgba(108,92,231,.15);border:1px solid rgba(108,92,231,.25);
+  font-size:12px;font-weight:500;color:#a29bfe;margin-bottom:24px;
+  letter-spacing:1px
+}
+.hero h1{
+  font-size:clamp(48px,12vw,96px);font-weight:900;
+  background:linear-gradient(135deg,#fff 30%,#a29bfe 70%,#6c5ce7);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1.1;margin-bottom:8px
+}
+.hero-sub{
+  font-size:clamp(18px,4vw,28px);font-weight:300;
+  color:#888;margin-bottom:16px
+}
+.hero-en{font-size:14px;color:#555;letter-spacing:4px;margin-bottom:32px}
+.hero-motto{
+  font-size:clamp(16px,2.5vw,22px);font-weight:500;
+  color:#a29bfe;font-style:italic;
+  padding:12px 28px;
+  border:1px solid rgba(108,92,231,.3);border-radius:12px;
+  background:rgba(108,92,231,.08);
+  backdrop-filter:blur(4px)
+}
+.scroll-hint{
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  color:#555;font-size:11px;letter-spacing:2px;
+  animation:bounce 2s infinite
+}
+.scroll-hint svg{width:20px;height:20px}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+/* ── section titles ── */
+.sec-title{
+  font-size:clamp(28px,5vw,42px);font-weight:800;
+  margin-bottom:8px;position:relative
+}
+.sec-title .highlight{background:linear-gradient(135deg,#6c5ce7,#a29bfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sec-subtitle{
+  font-size:15px;color:#666;margin-bottom:40px;font-weight:300
+}
+.sec-divider{
+  width:48px;height:3px;background:linear-gradient(90deg,#6c5ce7,#a29bfe);
+  border-radius:2px;margin-bottom:32px
+}
+
+/* ── reveal animation ── */
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ── card grid ── */
+.card-grid{display:grid;gap:20px}
+.card-grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card-grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:28px 24px;
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden
+}
+.card:hover{
+  background:rgba(255,255,255,.06);
+  border-color:rgba(108,92,231,.2);
+  transform:translateY(-4px);
+  box-shadow:0 12px 48px rgba(108,92,231,.08)
+}
+.card-icon{font-size:28px;margin-bottom:12px;display:block}
+.card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.card p{font-size:14px;color:#888;line-height:1.7}
+.card .tag{
+  display:inline-block;padding:2px 10px;border-radius:6px;
+  font-size:11px;font-weight:600;margin-top:12px;margin-right:6px
+}
+
+/* ── about section ── */
+.about-content{
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center
+}
+.about-text p{font-size:16px;color:#999;margin-bottom:16px;line-height:1.8}
+.about-text p strong{color:#e8e8ed;font-weight:600}
+.about-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px
+}
+.stat-item{
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:16px;text-align:center
+}
+.stat-item .num{
+  font-size:24px;font-weight:800;
+  background:linear-gradient(135deg,#6c5ce7,#a29bfe);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.stat-item .label{font-size:12px;color:#666;margin-top:4px}
+
+/* ── club cards ── */
+.club-card{
+  display:flex;align-items:center;gap:20px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:24px;
+  transition:all .35s cubic-bezier(.4,0,.2,1)
+}
+.club-card:hover{transform:translateY(-4px)}
+.club-card.shenhua:hover{border-color:rgba(0,64,152,.5);background:rgba(0,64,152,.08);box-shadow:0 8px 32px rgba(0,64,152,.12)}
+.club-card.arsenal:hover{border-color:rgba(239,1,7,.5);background:rgba(239,1,7,.08);box-shadow:0 8px 32px rgba(239,1,7,.12)}
+.club-crest{width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900}
+.club-crest.shenhua{background:linear-gradient(135deg,#004098,#0066cc);color:#fff}
+.club-crest.arsenal{background:linear-gradient(135deg,#EF0107,#cc0000);color:#fff}
+.club-info h3{font-size:18px;font-weight:700}
+.club-info p{font-size:13px;color:#888;line-height:1.6}
+.club-info .badge{
+  display:inline-block;padding:3px 10px;border-radius:6px;
+  font-size:11px;font-weight:600;margin-top:8px
+}
+
+/* ── music / game ── */
+.hobby-card{text-align:center;padding:32px 20px}
+.hobby-card .emoji{font-size:40px;margin-bottom:12px;display:block}
+.hobby-card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.hobby-card p{font-size:13px;color:#888}
+
+/* ── quote banner ── */
+.quote-section{
+  background:radial-gradient(ellipse at center, rgba(108,92,231,.08) 0%, transparent 70%);
+  text-align:center;padding:100px 24px
+}
+.quote-section blockquote{
+  font-size:clamp(24px,4vw,40px);font-weight:700;
+  line-height:1.3;max-width:700px;margin:0 auto 16px
+}
+.quote-section cite{font-style:normal;font-size:14px;color:#666}
+
+/* ── contact ── */
+.contact-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px
+}
+.contact-item{
+  display:flex;align-items:center;gap:14px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:12px;padding:18px 20px;
+  text-decoration:none;color:#e8e8ed;
+  transition:all .3s
+}
+.contact-item:hover{background:rgba(108,92,231,.1);border-color:rgba(108,92,231,.3);transform:translateY(-2px)}
+.contact-item .ci-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.contact-item .ci-label{font-size:11px;color:#666}
+.contact-item .ci-value{font-size:14px;font-weight:600;word-break:break-all}
+
+/* ── friends ── */
+.friend-card{
+  display:flex;align-items:center;gap:24px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;padding:28px 24px;
+  transition:all .35s
+}
+.friend-card:hover{background:rgba(255,255,255,.06);border-color:rgba(108,92,231,.2);transform:translateY(-4px)}
+.friend-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,#fd79a8,#e84393);
+  display:flex;align-items:center;justify-content:center;
+  font-size:28px;flex-shrink:0
+}
+.friend-info h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.friend-info p{font-size:14px;color:#888;line-height:1.6;margin-bottom:6px}
+.friend-nickname{
+  display:inline-block;padding:2px 10px;border-radius:6px;
+  background:rgba(253,121,168,.15);color:#fd79a8;font-size:12px;font-weight:600
+}
+
+/* ── footer ── */
+.site-footer{
+  text-align:center;padding:40px 24px;
+  border-top:1px solid rgba(255,255,255,.04);
+  color:#444;font-size:13px
+}
+
+/* ── photo placeholders ── */
+.photo-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px
+}
+.photo-placeholder{
+  aspect-ratio:1;border-radius:12px;
+  background:linear-gradient(135deg,rgba(108,92,231,.1),rgba(162,155,254,.05));
+  border:1px dashed rgba(108,92,231,.25);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#555;font-size:12px;gap:6px;
+  cursor:pointer;transition:all .3s
+}
+.photo-placeholder:hover{background:rgba(108,92,231,.15);border-color:rgba(108,92,231,.4);color:#888}
+.photo-placeholder .pp-icon{font-size:24px;opacity:.5}
+.photo-tip{
+  text-align:center;font-size:12px;color:#444;margin-top:8px
+}
+
+/* ── floating particles ── */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{
+  position:absolute;width:3px;height:3px;background:#6c5ce7;
+  border-radius:50%;opacity:0;
+  animation:float linear infinite
+}
+@keyframes float{
+  0%{opacity:0;transform:translateY(100vh) rotate(0deg)}
+  10%{opacity:.4}
+  90%{opacity:.4}
+  100%{opacity:0;transform:translateY(-10vh) rotate(720deg)}
+}
+
+/* ── responsive ── */
+@media(max-width:768px){
+  .nav{padding:12px 16px}
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:rgba(10,10,15,.95);backdrop-filter:blur(16px);padding:16px;gap:12px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav-links.open{display:flex}
+  .nav-hamburger{display:block}
+  .hero{padding:100px 16px 40px}
+  .about-content{grid-template-columns:1fr;gap:32px}
+  .section{padding:60px 16px}
+  .club-card{padding:16px}
+  .friend-card{flex-direction:column;text-align:center}
+  .photo-grid{grid-template-columns:repeat(2,1fr)}
+  .contact-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ── particles ── -->
+<div class="particles" id="particles"></div>
+
+<!-- ── nav ── -->
+<nav class="nav" id="nav">
+  <span class="nav-logo">✦ Coral</span>
+  <button class="nav-hamburger" id="hamburger" aria-label="Menu">☰</button>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#football">⚽ 足球</a></li>
+    <li><a href="#music">🎸 音乐</a></li>
+    <li><a href="#game">🎮 游戏</a></li>
+    <li><a href="#friends">👫 朋友</a></li>
+    <li><a href="#contact">📱 联系</a></li>
+  </ul>
+</nav>
+
+<!-- ── hero ── -->
+<section class="hero" id="hero">
+  <div class="hero-badge">🎓 2025 届毕业生</div>
+  <h1>王歆宇</h1>
+  <div class="hero-sub">Coral</div>
+  <div class="hero-en">SHANGHAI · 松江</div>
+  <div class="hero-motto">"Fight for the loved ones"</div>
+  <div class="scroll-hint">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+    <span>SCROLL</span>
+  </div>
+</section>
+
+<!-- ── about ── -->
+<section class="section" id="about">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">关于 <span class="highlight">我</span></h2>
+      <p class="sec-subtitle">一个即将踏入大学的上海青年</p>
+    </div>
+
+    <div class="about-content">
+      <div class="about-text reveal">
+        <p>你好！我是 <strong>王歆宇</strong>，你可以叫我 <strong>Coral</strong>。刚刚从 <strong>华东政法大学附属松江高级中学</strong> 毕业，即将开启大学生活的新篇章。</p>
+        <p>生活在 <strong>上海松江</strong>，这座城市赋予了我多元的视野和丰富的生活。我喜欢足球、音乐、游戏，也热爱去现场感受每一次心跳的瞬间。</p>
+        <p>我相信 <strong>"Fight for the loved ones"</strong> —— 为所爱之人而战，这不仅仅是一句话，更是我生活的信条。</p>
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-item">
+          <div class="num">18</div>
+          <div class="label">年龄</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">🎓</div>
+          <div class="label">高中毕业</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">🏟️</div>
+          <div class="label">年卡会员</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">🎸</div>
+          <div class="label">会弹吉他</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- photo placeholders -->
+    <div class="reveal" style="margin-top:32px">
+      <p style="font-size:13px;color:#555;margin-bottom:12px;text-align:center">📸 照片墙（点击占位框上传你的照片）</p>
+      <div class="photo-grid">
+        <div class="photo-placeholder" id="photo1" onclick="document.getElementById('photoInput').click()">
+          <span class="pp-icon">📷</span>
+          <span>我的照片</span>
+        </div>
+        <div class="photo-placeholder" id="photo2" onclick="document.getElementById('photoInput').click()">
+          <span class="pp-icon">📷</span>
+          <span>朋友圈截图</span>
+        </div>
+        <div class="photo-placeholder" id="photo3" onclick="document.getElementById('photoInput').click()">
+          <span class="pp-icon">📷</span>
+          <span>合照</span>
+        </div>
+      </div>
+      <div class="photo-tip">💡 点击占位框上传你的照片，图片会自动替换</div>
+      <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(event)">
+    </div>
+  </div>
+</section>
+
+<!-- ── football ── -->
+<section class="section" id="football">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">⚽ 足球 <span class="highlight">信仰</span></h2>
+      <p class="sec-subtitle">一生蓝白 · 一世红白</p>
+    </div>
+
+    <div class="card-grid card-grid-2" style="margin-bottom:20px">
+      <div class="club-card shenhua reveal">
+        <div class="club-crest shenhua">申</div>
+        <div class="club-info">
+          <h3>上海申花</h3>
+          <p>🏆 主场年卡会员 · 每场必到<br>蓝色信仰，申是信仰</p>
+          <span class="badge" style="background:rgba(0,64,152,.15);color:#4d94ff">💙 年卡持有者</span>
+        </div>
+      </div>
+      <div class="club-card arsenal reveal">
+        <div class="club-crest arsenal">A</div>
+        <div class="club-info">
+          <h3>阿森纳</h3>
+          <p>🏴󠁧󠁢󠁥󠁮󠁧󠁿 北伦敦的骄傲<br>Coyg — Come On You Gunners!</p>
+          <span class="badge" style="background:rgba(239,1,7,.15);color:#ff6b6b">❤️ Gooner</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card reveal" style="padding:24px;margin-top:12px">
+      <p style="font-size:14px;color:#999;text-align:center">
+        🧠 对足球战术、历史、转会市场有着极高的专业素养，<br>
+        从英超到中超，从欧冠到亚冠，聊球我随时奉陪！
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── music ── -->
+<section class="section" id="music">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">🎸 音乐 & <span class="highlight">现场</span></h2>
+      <p class="sec-subtitle">Live House · 演唱会 · 吉他与旋律</p>
+    </div>
+
+    <div class="card-grid card-grid-3 reveal">
+      <div class="card hobby-card">
+        <span class="emoji">🎸</span>
+        <h3>弹吉他</h3>
+        <p>弦上的浪漫<br>用音乐表达自我</p>
+      </div>
+      <div class="card hobby-card">
+        <span class="emoji">🎤</span>
+        <h3>DigiGhetto</h3>
+        <p>中文说唱的新浪潮<br>现场炸裂</p>
+      </div>
+      <div class="card hobby-card">
+        <span class="emoji">🎵</span>
+        <h3>Gali</h3>
+        <p>独特腔调与flow<br>歌词里的诗人</p>
+      </div>
+      <div class="card hobby-card">
+        <span class="emoji">🎼</span>
+        <h3>薛之谦</h3>
+        <p>深情与幽默并存<br>每一首都是故事</p>
+      </div>
+      <div class="card hobby-card">
+        <span class="emoji">🏟️</span>
+        <h3>Live House</h3>
+        <p>看过无数场现场<br>每一场都是独家记忆</p>
+      </div>
+      <div class="card hobby-card">
+        <span class="emoji">🎶</span>
+        <h3>演唱会达人</h3>
+        <p>上海各大场馆<br>都有我的足迹</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── game ── -->
+<section class="section" id="game">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">🎮 王者 <span class="highlight">荣耀</span></h2>
+      <p class="sec-subtitle">峡谷里见真章</p>
+    </div>
+
+    <div class="card-grid card-grid-2">
+      <div class="card reveal" style="text-align:center;padding:36px 24px">
+        <span style="font-size:56px;display:block;margin-bottom:16px">⚔️</span>
+        <h3 style="font-size:22px;margin-bottom:8px">本命英雄：<span style="color:#a29bfe">元歌</span></h3>
+        <p style="font-size:14px;color:#888">
+          1433223？不，我是真正的傀儡师。<br>
+          万场元歌，纵横峡谷
+        </p>
+      </div>
+      <div class="card reveal" style="text-align:center;padding:36px 24px">
+        <span style="font-size:56px;display:block;margin-bottom:16px">🏆</span>
+        <h3 style="font-size:22px;margin-bottom:8px">游戏态度</h3>
+        <p style="font-size:14px;color:#888">
+          不只是娱乐，更是竞技<br>
+          享受每一场对局
+        </p>
+        <span class="tag" style="background:rgba(108,92,231,.15);color:#a29bfe">🎮 全能选手</span>
+      </div>
+    </div>
+
+    <div class="reveal" style="margin-top:24px;text-align:center">
+      <p style="font-size:13px;color:#555">🎯 王者 ID 可私信获取，solo 欢迎来战</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── friends ── -->
+<section class="section" id="friends">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">👫 我的 <span class="highlight">朋友</span></h2>
+      <p class="sec-subtitle">人生中最重要的伙伴</p>
+    </div>
+
+    <div class="card-grid card-grid-2">
+      <div class="friend-card reveal">
+        <div class="friend-avatar">👦</div>
+        <div class="friend-info">
+          <h3>罗敏德</h3>
+          <p>我的 best friend 兄弟<br>
+          一起经历了无数个日夜，从校园到未来的每一步都有他。</p>
+          <p style="font-size:12px;color:#555">🤝 最好的兄弟 · 一辈子的伙伴</p>
+        </div>
+      </div>
+      <div class="friend-card reveal">
+        <div class="friend-avatar">🐟</div>
+        <div class="friend-info">
+          <h3>鲷鱼烧分你一半 <span class="friend-nickname">鲷鱼烧</span></h3>
+          <p>我的 best friend，叫她 <strong>鲷鱼烧</strong> 🐟<br>
+          一起经历了无数个日夜，从校园到未来的每一步都有她。<br>
+          鲷鱼烧分你一半——就像我们的友谊，永远分享，永远完整。</p>
+          <p style="font-size:12px;color:#555">💜 最好的朋友 · 一辈子的伙伴</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- photo placeholders for friends -->
+    <div class="reveal" style="margin-top:20px">
+      <div class="photo-grid" style="grid-template-columns:1fr 1fr">
+        <div class="photo-placeholder" id="friendPhoto1" onclick="document.getElementById('photoInput').click()" style="max-width:100%">
+          <span class="pp-icon">📸</span>
+          <span>我和罗敏德</span>
+        </div>
+        <div class="photo-placeholder" id="friendPhoto2" onclick="document.getElementById('photoInput').click()" style="max-width:100%">
+          <span class="pp-icon">📸</span>
+          <span>我和鲷鱼烧</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── quote ── -->
+<section class="quote-section section">
+  <div class="reveal">
+    <blockquote>
+      "Fight for the loved ones"
+    </blockquote>
+    <cite>— 王歆宇 Coral · 为所爱之人而战</cite>
+  </div>
+</section>
+
+<!-- ── contact ── -->
+<section class="section" id="contact">
+  <div class="section-inner">
+    <div class="reveal">
+      <div class="sec-divider"></div>
+      <h2 class="sec-title">📱 联系 <span class="highlight">我</span></h2>
+      <p class="sec-subtitle">随时找我聊天~</p>
+    </div>
+
+    <div class="contact-grid reveal">
+      <a href="tel:15800320424" class="contact-item">
+        <div class="ci-icon" style="background:rgba(0,200,83,.1);color:#00c853">📞</div>
+        <div>
+          <div class="ci-label">电话</div>
+          <div class="ci-value">158-0032-0424</div>
+        </div>
+      </a>
+      <a href="#" class="contact-item" onclick="event.preventDefault();navigator.clipboard.writeText('wxyyy_0424').then(()=>alert('微信号 wxyyy_0424 已复制到剪贴板!'))">
+        <div class="ci-icon" style="background:rgba(7,193,96,.1);color:#07c160">💬</div>
+        <div>
+          <div class="ci-label">微信</div>
+          <div class="ci-value">wxyyy_0424</div>
+        </div>
+      </a>
+      <div class="contact-item" style="cursor:default">
+        <div class="ci-icon" style="background:rgba(108,92,231,.1);color:#a29bfe">📍</div>
+        <div>
+          <div class="ci-label">坐标</div>
+          <div class="ci-value">上海 · 松江</div>
+        </div>
+      </div>
+      <div class="contact-item" style="cursor:default">
+        <div class="ci-icon" style="background:rgba(255,193,7,.1);color:#ffc107">✉️</div>
+        <div>
+          <div class="ci-label">英语名</div>
+          <div class="ci-value">Coral</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── footer ── -->
+<footer class="site-footer">
+  <p>Made with ❤️ by Coral · 王歆宇</p>
+  <p style="margin-top:4px;font-size:11px">Fight for the loved ones ✦</p>
+</footer>
+
+<script>
+/* ── particles ── */
+(function(){
+  const c=document.getElementById('particles');
+  for(let i=0;i<40;i++){
+    const p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.width=p.style.height=(1+Math.random()*3)+'px';
+    p.style.animationDuration=(10+Math.random()*20)+'s';
+    p.style.animationDelay=Math.random()*20+'s';
+    p.style.background=`hsla(${260+Math.random()*40},70%,${60+Math.random()*30}%,.3)`;
+    c.appendChild(p);
+  }
+})();
+
+/* ── nav hide on scroll down ── */
+let lastScroll=0;
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  const cur=window.scrollY;
+  if(cur>lastScroll&&cur>80)nav.classList.add('hidden');
+  else nav.classList.remove('hidden');
+  lastScroll=cur;
+},{passive:true});
+
+/* ── reveal on scroll ── */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}
+  });
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* ── hamburger ── */
+document.getElementById('hamburger').addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.toggle('open');
+});
+document.querySelectorAll('.nav-links a').forEach(a=>{
+  a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open'));
+});
+
+/* ── photo upload ── */
+function handlePhotoUpload(e){
+  const files=e.target.files;
+  if(!files.length)return;
+  const placeholders=[
+    document.getElementById('photo1'),
+    document.getElementById('photo2'),
+    document.getElementById('photo3'),
+    document.getElementById('friendPhoto1'),
+    document.getElementById('friendPhoto2')
+  ];
+  for(let i=0;i<Math.min(files.length,placeholders.length);i++){
+    const reader=new FileReader();
+    reader.onload=function(ev){
+      placeholders[i].innerHTML='';
+      const img=document.createElement('img');
+      img.src=ev.target.result;
+      img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:12px';
+      placeholders[i].appendChild(img);
+      placeholders[i].style.border='none';
+      placeholders[i].style.cursor='default';
+    };
+    reader.readAsDataURL(files[i]);
+  }
+}
+</script>
+</body>
+</html>
